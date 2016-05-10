@@ -1,4 +1,5 @@
-# Docker Image for UNHAnalytics
+# Docker Image for UNHAnalytics ![UNH](/EmblemDigital_RGB.png =200x200)
+[![DockerPulls](https://img.shields.io/docker/pulls/alexandercbooth/unhanalytics.svg)](https://registry.hub.docker.com/u/alexandercbooth/unhanalytics/)
 
 ## To start a notebook, run:
 ```

@@ -104,8 +104,14 @@ RUN conda install -y -c r r-essentials \
 USER root
 RUN apt-get update && apt-get install -yq sqlite3
 
-# Install Hadoop
-RUN pip install mrjob
+# Install node
+RUN apt-get install -y nodejs
+
+
+# Install Hadoop -- remember to finish
+RUN pip install mrjob && \
+    conda install dask
+
 
 # Install Spark
 # Spark dependencies
@@ -145,5 +151,21 @@ RUN pip install --pre toree && \
 RUN cd /usr/local/src && mkdir xgboost && cd xgboost && \
     git clone --recursive https://github.com/dmlc/xgboost.git && cd xgboost && \
     make && cd python-package && python setup.py install
+
+# Install Nets, keras, lasagne, tensorflow
+RUN pip install keras && \
+    pip install git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git && \
+    pip install --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.8.0-cp27-none-linux_x86_64.whl
+
+# Install Gensim for text
+RUN pip install gensim
+
+# For geodata
+RUN pip install pyshp && \
+    pip install geopandas && \
+    npm install ogr2ogr && \
+    npm install topojson
+
+
 
 USER unh
