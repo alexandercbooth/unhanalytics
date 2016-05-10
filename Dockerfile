@@ -141,5 +141,9 @@ ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M -
 RUN pip install --pre toree && \
     jupyter toree install
 
+# Install XGBoost
+RUN cd /usr/local/src && mkdir xgboost && cd xgboost && \
+    git clone --recursive https://github.com/dmlc/xgboost.git && cd xgboost && \
+    make && cd python-package && python setup.py install
 
 USER unh
