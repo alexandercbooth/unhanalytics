@@ -152,10 +152,9 @@ RUN cd /usr/local/src && mkdir xgboost && cd xgboost && \
     git clone --recursive https://github.com/dmlc/xgboost.git && cd xgboost && \
     make && cd python-package && python setup.py install
 
-# Install Nets, keras, lasagne, tensorflow
+# Install Nets, keras, lasagne
 RUN pip install keras && \
     pip install git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git && \
-    pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.8.0-cp27-none-linux_x86_64.whl
 
 # Install Gensim for text
 RUN pip install gensim
