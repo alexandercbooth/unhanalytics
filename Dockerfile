@@ -6,12 +6,12 @@ USER root
 
 # Install all OS dependencies for fully functional notebook server
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apt-get update && apt-get install -yq --no-install-recommends --fix-missing \
     git \
     vim \
     jed \
-    emacs \
     wget \
+    curl \
     build-essential \
     python-dev \
     ca-certificates \
@@ -20,10 +20,10 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     libsm6 \
     pandoc \
     texlive-latex-base \
-    texlive-latex-extra \
-    texlive-fonts-extra \
-    texlive-fonts-recommended \
-    texlive-generic-recommended \
+  #  texlive-latex-extra \
+  #  texlive-fonts-extra \
+  #  texlive-fonts-recommended \
+#    texlive-generic-recommended \
     sudo \
     locales \
     libxrender1 \
@@ -33,6 +33,8 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
+# Install Docker -- how meta
+RUN curl -fsSL https://get.docker.com/ | sh
 # Install Tini
 RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.9.0/tini && \
     echo "faafbfb5b079303691a939a747d7f60591f2143164093727e870b289a44d9872 *tini" | sha256sum -c - && \
@@ -100,6 +102,34 @@ RUN conda install -y python=2.7 anaconda
 RUN conda install -y -c r r-essentials \
     && conda clean -tipsy
 
+# Install Julia
+USER root
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    julia \
+    libnettle4 && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+USER unh
+RUN julia -e 'Pkg.add("IJulia")' && \
+    mv /home/$NB_USER/.local/share/jupyter/kernels/* $CONDA_DIR/share/jupyter/kernels/ && \
+    chmod -R go+rx $CONDA_DIR/share/jupyter && \
+    rm -rf /home/$NB_USER/.local/share
+
+RUN echo 'push!(Sys.DL_LOAD_PATH, "/opt/conda/lib")' > /home/$NB_USER/.juliarc.jl && \
+    julia -e 'Pkg.add("Gadfly")' && julia -e 'Pkg.add("RDatasets")' && julia -F -e 'Pkg.add("HDF5")' && \
+    julia -e 'Pkg.add("BinDeps")' && julia -e 'Pkg.add("Cairo")' && julia -F -e 'Pkg.add("Calculus")' && \
+    julia -e 'Pkg.add("Clustering")' && julia -e 'Pkg.add("Compose")' && julia -F -e 'Pkg.add("DataArrays")' && \
+    julia -e 'Pkg.add("DataFrames")' && julia -e 'Pkg.add("DataFramesMeta")' && julia -F -e 'Pkg.add("Dates")' && \
+    julia -e 'Pkg.add("DecisionTree")' && julia -e 'Pkg.add("Distributions")' && julia -F -e 'Pkg.add("Distances")' && \
+    julia -e 'Pkg.add("GLM")' && julia -e 'Pkg.add("HypothesisTests")' && julia -F -e 'Pkg.add("JSON")' && \
+    julia -e 'Pkg.add("KernelDensity")' && julia -e 'Pkg.add("Loess")' && julia -F -e 'Pkg.add("Lora")' && \
+    julia -e 'Pkg.add("MLBase")' && julia -e 'Pkg.add("MultivariateStats")' && julia -F -e 'Pkg.add("MachineLearning")' && \
+    julia -e 'Pkg.add("NMF")' && julia -e 'Pkg.add("Optim")' && julia -F -e 'Pkg.add("PDMats")' && \
+    julia -e 'Pkg.add("SQLite")' && julia -e 'Pkg.add("StatsBase")' && julia -F -e 'Pkg.add("TextAnalysis")' && \
+    julia -e 'Pkg.add("TimeSeries")' && julia -e 'Pkg.add("ZipFile")' && julia -F -e 'Pkg.add("PDMats")' && \
+    julia -e 'Pkg.add("XGBoost")'
+
 # Install sqlite
 USER root
 RUN apt-get update && apt-get install -yq sqlite3
@@ -154,16 +184,17 @@ RUN cd /usr/local/src && mkdir xgboost && cd xgboost && \
 
 # Install Nets, keras, lasagne
 RUN pip install keras && \
-    pip install git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git && \
+    pip install git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git
 
 # Install Gensim for text
 RUN pip install gensim
 
-# For geodata
-RUN pip install pyshp && \
-    pip install geopandas && \
-    npm install ogr2ogr && \
-    npm install topojson
+# # For geodata
+# RUN pip install pyshp && \
+#     npm install ogr2ogr && \
+#     npm install topojson && \
+#     pip install geopandas
+
 
 
 
