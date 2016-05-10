@@ -1,4 +1,4 @@
-# Docker Image for UNHAnalytics
+# Official Docker Image for UNHAnalytics
 <img src="EmblemDigital_RGB.png" height=200>
 
 [![DockerPulls](https://img.shields.io/docker/pulls/alexandercbooth/unhanalytics.svg)](https://registry.hub.docker.com/u/alexandercbooth/unhanalytics/)
