@@ -191,6 +191,9 @@ RUN pip install keras && \
 # Install Gensim for text
 RUN pip install gensim
 
+# Install Lifelines for Survival Analysis
+RUN pip install lifelines
+
 # # For geodata
 # RUN pip install pyshp && \
 #     npm install ogr2ogr && \
