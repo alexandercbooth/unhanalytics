@@ -200,7 +200,6 @@ RUN pip install lifelines
 #     npm install topojson && \
 #     pip install geopandas
 
-
-
-
 USER unh
+RUN pip install bash_kernel && \
+    python -m bash_kernel.install
