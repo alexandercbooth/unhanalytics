@@ -98,7 +98,7 @@ RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter
 
 # Install full anaconda distributions of python2 and R
 USER unh
-RUN conda install -y python=2.7 anaconda
+RUN conda install -y python=3.5 anaconda
 RUN conda install -y -c r r-essentials \
     && conda clean -tipsy
 
