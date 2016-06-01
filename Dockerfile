@@ -197,12 +197,23 @@ RUN pip install lifelines
 # Hiveplot for Social Network Analysis
 RUN pip install hiveplot
 
-# # For geodata
-# RUN pip install pyshp && \
-#     npm install ogr2ogr && \
-#     npm install topojson && \
-#     pip install geopandas
 
 USER unh
 RUN pip install bash_kernel && \
     python -m bash_kernel.install
+
+# Add python3
+RUN conda create -y -n py3 python=3.5 anaconda jupyter
+
+# Add tensorflow & Geodata tools
+RUN conda config --add channels conda-forge && \
+    conda install tensorflow && \
+    conda install pyshp && \
+    conda install geopandas 
+    #conda install gdal
+
+    # # For geodata
+    # RUN pip install pyshp && \
+    #     npm install ogr2ogr && \
+    #     npm install topojson && \
+    #     pip install geopandas
